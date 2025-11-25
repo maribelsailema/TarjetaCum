@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Feliz Cumpleaños - Tarjeta Gamer Tech</title>
+
+<style>
+body {
+  margin: 0;
+  background: #0a0f1f;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
+  color: white;
+}
+
+/* ---------------- INTRO MODAL ---------------- */
+#introModal {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.9);
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  z-index: 9999;
+}
+
+#carousel {
+  width: 80%; max-width: 700px; height: 400px;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(0,255,255,0.4);
+  position: relative;
+}
+
+.slide {
+  width: 100%; height: 100%;
+  position: absolute; top:0; left:0;
+  opacity: 0;
+  transition: opacity 1s;
+  background-size: cover;
+  background-position: center;
+}
+
+#introBtn {
+  margin-top: 30px;
+  padding: 15px 40px;
+  border: none;
+  background: #00eaff;
+  color: black;
+  font-size: 1.4rem;
+  font-weight: bold;
+  border-radius: 40px;
+  cursor: pointer;
+}
+
+/* ---------------- MAIN CONTENT ---------------- */
+#mainContent {
+  display: none;
+  padding: 40px;
+  text-align: center;
+  position: relative;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* ---------------- BALLOONS ---------------- */
+.balloon {
+  position: absolute;
+  bottom: -150px;
+  width: 50px; height: 70px;
+  background: linear-gradient(#03f4a1, #02d18b);
+  border-radius: 50%;
+  animation: float 10s linear infinite;
+  filter: drop-shadow(0 0 10px #00ffbf);
+}
+@keyframes float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-130vh); }
+}
+
+/* ---------------- CONFETTI ---------------- */
+.confetti {
+  position: absolute;
+  width: 8px; height: 14px;
+  background: lime;
+  animation: fall 5s linear infinite;
+}
+@keyframes fall {
+  0% { transform: translateY(-10vh); }
+  100% { transform: translateY(110vh); }
+}
+
+/* ---------------- GIFT GRID ---------------- */
+.gift-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px,1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.gift {
+  background: rgba(0,255,200,0.1);
+  border: 2px solid #00eaff;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 0 15px rgba(0,255,255,0.4);
+  cursor: pointer;
+  transition: 0.3s;
+}
+.gift:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px #00fbe6;
+}
+.gift img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+#giftMsg { margin-top: 10px; font-size: 1rem; opacity: 0.85; }
+
+</style>
+</head>
+<body>
+
+<!-- ------------------- INTRO MODAL ------------------- -->
+<div id="introModal">
+  <div id="carousel">
+    <div class="slide" style="background-image:url('img/foto2.png'); opacity:1"></div>
+    <div class="slide" style="background-image:url('img/foto1.png')"></div>
+    <div class="slide" style="background-image:url('img/foto2.png')"></div>
+    <div class="slide" style="background-image:url('img/foto1.png')"></div>
+  </div>
+
+  <h1 style="margin-top:20px; text-shadow:0 0 20px #0ff;">
+    Feliz Cumpleaños
+  </h1>
+
+  <button id="introBtn">Entrar</button>
+
+<iframe id="ytPlayer" width="0" height="0" 
+  frameborder="0"
+  allow="autoplay; encrypted-media"
+  allowfullscreen>
+</iframe>
+
+</div>
+
+
+<!-- ------------------- MAIN CONTENT ------------------- -->
+<div id="mainContent">
+  <h1 style="text-shadow:0 0 20px #00eaff;">🎁 Sorpresas para Ti 🎁</h1>
+  <div class="gift-grid" id="giftGrid"></div>
+</div>
+
+
+<!-- ------------------- MODAL DE REGALO ------------------- -->
+<div id="giftModal" 
+     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.9); z-index:99999;
+            justify-content:center; align-items:center; flex-direction:column;
+            text-align:center; padding:20px;">
+  
+  <img id="giftModalImg" src="" 
+       style="width:260px; border-radius:15px; box-shadow:0 0 20px #00eaff;">
+  
+  <h2 id="giftModalMsg" style="margin-top:20px; text-shadow:0 0 15px #00fbe6;"></h2>
+
+  <button onclick="closeGiftModal()" 
+          style="margin-top:25px; padding:12px 30px; background:#00eaff;
+                 border:none; border-radius:30px; font-weight:bold; cursor:pointer;">
+      Cerrar
+  </button>
+</div>
+
+
+<!-- ------------------- SCRIPT ------------------- -->
+<script>
+
+    let ytPlayer;
+
+// Cargar librería de YouTube dinámicamente
+let tag = document.createElement("script");
+tag.src = "https://www.youtube.com/iframe_api";
+document.body.appendChild(tag);
+
+// Crear el reproductor invisble
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player("ytPlayer", {
+    height: "0",
+    width: "0",
+    videoId: "Ho-Eh-91qk8", // ID del video
+    playerVars: {
+      autoplay: 0,  
+      controls: 0,
+      loop: 1,
+      playlist: "Ho-Eh-91qk8"
+    }
+  });
+}
+
+/* ------------ CAROUSEL ------------ */
+let slides = document.querySelectorAll('.slide');
+let idx = 0;
+setInterval(() => {
+  slides[idx].style.opacity = 0;
+  idx = (idx + 1) % slides.length;
+  slides[idx].style.opacity = 1;
+}, 2500);
+
+/* ------------ ENTRAR ------------ */
+introBtn.onclick = () => {
+  introModal.style.display = 'none';
+  mainContent.style.display = 'block';
+
+  // Esperar hasta que la API cargue
+  let waitPlayer = setInterval(() => {
+    if (ytPlayer && ytPlayer.playVideo) {
+      ytPlayer.loadVideoById("Ho-Eh-91qk8");
+      ytPlayer.playVideo();
+      clearInterval(waitPlayer);
+    }
+  }, 300);
+
+  createBalloons();
+  createConfetti();
+  loadGifts();
+};
+
+
+
+/* ------------ BALLOONS ------------ */
+function createBalloons() {
+  for (let i=0;i<20;i++) {
+    let b=document.createElement('div');
+    b.classList.add('balloon');
+    b.style.left=Math.random()*100+'vw';
+    b.style.animationDelay=(Math.random()*5)+'s';
+    document.body.appendChild(b);
+  }
+}
+
+/* ------------ CONFETTI ------------ */
+function createConfetti() {
+  for (let i=0;i<50;i++) {
+    let c=document.createElement('div');
+    c.classList.add('confetti');
+    c.style.left=Math.random()*100+'vw';
+    c.style.background=['#00ff95','#00eaff','#67ff0a'][Math.floor(Math.random()*3)];
+    c.style.animationDelay=Math.random()*4+'s';
+    document.body.appendChild(c);
+  }
+}
+
+/* ------------ MENSAJES ------------ */
+let mensajes = [
+  "Eres increíble.","Gracias por existir.","Tu energía inspira.","Te admiro.",
+  "Tu sonrisa alegra.","Eres especial.","Siempre fuerte.","Único en todo.",
+  "Vales oro.","Tu corazón es enorme.","Tu esencia brilla.","Te mereces lo mejor.",
+  "Me encantas.","Eres sabio.","Tienes un alma hermosa.","Eres auténtico.",
+  "Tu mirada transmite paz.","Haces todo mejor.","Brillas sin intentarlo.",
+  "Tu presencia calma.","Eres luz.","Siempre contigo.","Gracias por tanto.",
+  "Tu bondad destaca.","Eres maravilloso.","Feliz vida siempre."
+];
+
+/* ------------ CARGAR REGALOS ------------ */
+function loadGifts(){
+ let grid=document.getElementById('giftGrid');
+ for(let i=0;i<26;i++){
+  let box=document.createElement('div');
+  box.classList.add('gift');
+  box.setAttribute('data-msg', mensajes[i]);
+  box.setAttribute('data-img', `img/abrazo.jpg`);
+
+  box.innerHTML = `
+    <img src="img/regalo.png">
+    <p id='giftMsg' style='display:none;'>${mensajes[i]}</p>
+  `;
+
+  box.onclick = () => openGiftModal(
+    box.getAttribute('data-img'),
+    box.getAttribute('data-msg')
+  );
+
+  grid.appendChild(box);
+ }
+}
+
+/* ------------ MODAL ------------ */
+function openGiftModal(img, msg){
+  giftModal.style.display='flex';
+  giftModalImg.src = img;
+  giftModalMsg.innerText = msg;
+}
+function closeGiftModal(){
+  giftModal.style.display='none';
+}
+</script>
+
+</body>
+</html>
